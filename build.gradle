@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        maven { url 'https://files.minecraftforge.net/maven' }
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'application'
+apply plugin: 'edu.sc.seis.launch4j'
+
+version = '1.0.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+    version = "${minecraft_version}-${forge_version}"
+    runDir = 'run'
+    mappings = mcp_mappings
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+application {
+    mainClass = 'com.raspberryclient.launcher.RaspberryLauncher'
+}
+
+launch4j {
+    outputDir = "$buildDir/launcher"
+    outfile = 'RaspberryClient.exe'
+    mainClassName = application.mainClass
+    jar = "$buildDir/libs/${project.name}-${version}.jar"
+    jreMinVersion = '1.8.0'
+}
+
+jar {
+    manifest.attributes('Main-Class': application.mainClass)
+}
+
