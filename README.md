@@ -15,7 +15,7 @@ This repository only contains a starting template. Many features would need to b
 
 ```
 ./gradlew build
-./gradlew launch4j # generates RaspberryClient.exe in build/launcher
+./gradlew launch4j   # generates RaspberryClient.exe and the jar in build/launcher
 ```
 
 The build requires internet access to download dependencies.
