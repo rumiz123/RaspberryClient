@@ -3,6 +3,9 @@ package com.raspberryclient.launcher;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.io.File;
+import java.net.URISyntaxException;
+
+import com.raspberryclient.mod.RaspberryClient;
 
 /**
  * Simple launcher that wraps the built jar and starts it with Java.
@@ -13,7 +16,19 @@ public class RaspberryLauncher {
         JButton play = new JButton("Play");
         play.addActionListener(e -> {
             try {
-                File jar = new File("RaspberryClient-1.0.0.jar");
+                // Determine the directory this launcher is running from so the
+                // client jar can be located next to the EXE or jar.
+                File base;
+                try {
+                    base = new File(RaspberryLauncher.class.getProtectionDomain()
+                            .getCodeSource().getLocation().toURI()).getParentFile();
+                } catch (URISyntaxException ex) {
+                    base = new File(".");
+                }
+
+                String jarName = String.format("%s-%s.jar", "RaspberryClient", RaspberryClient.VERSION);
+                File jar = new File(base, jarName);
+
                 ProcessBuilder pb = new ProcessBuilder("java", "-jar", jar.getAbsolutePath());
                 pb.inheritIO();
                 pb.start();

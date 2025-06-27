@@ -35,13 +35,27 @@ application {
     mainClass = 'com.raspberryclient.launcher.RaspberryLauncher'
 }
 
+// Windows launcher configuration using Launch4J. The jar used by the EXE is
+// copied next to the launcher so the application can be distributed as a
+// simple folder containing RaspberryClient.exe and the client jar.
 launch4j {
     outputDir = "$buildDir/launcher"
     outfile = 'RaspberryClient.exe'
     mainClassName = application.mainClass
-    jar = "$buildDir/libs/${project.name}-${version}.jar"
+    // The jar path is relative to the generated EXE. We copy the jar in a
+    // separate task before running Launch4J.
+    jar = "${project.name}-${version}.jar"
     jreMinVersion = '1.8.0'
 }
+
+// Copy the client jar next to the generated launcher so the EXE can find it.
+task copyJarForLaunch(type: Copy) {
+    from("$buildDir/libs/${project.name}-${version}.jar")
+    into("$buildDir/launcher")
+}
+
+// Ensure the jar is present before creating the launcher.
+launch4j.dependsOn(copyJarForLaunch)
 
 jar {
     manifest.attributes('Main-Class': application.mainClass)
